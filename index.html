@@ -244,9 +244,65 @@
   // =========================
   // Create a free EmailJS account, connect Gmail/another supported service,
   // create an email template, then paste these 3 values here.
-const "xhXScP500ycWCjCjM"
-const "service_oumghuk"
-const "template_zjuobhx"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Form - EmailJS</title>
+    
+    <!-- EmailJS SDK Script -->
+    <script type="text/javascript" src="https://jsdelivr.net"></script>
+    <script type="text/javascript">
+        (function() {
+            // 1. Aapki EmailJS Public Key yahan initialize ho rahi hai
+            emailjs.init("xhXScP500ycWCjCjM");
+        })();
+    </script>
+</head>
+<body>
+
+    <h2>Place Your Order</h2>
+    
+    <!-- Order Form -->
+    <form id="order-form">
+        <label for="customer_name">Aapka Naam:</label><br>
+        <input type="text" id="customer_name" name="customer_name" required><br><br>
+
+        <label for="customer_email">Aapki Email:</label><br>
+        <input type="email" id="customer_email" name="customer_email" required><br><br>
+
+        <label for="order_details">Order Details (Items, Quantity, etc.):</label><br>
+        <textarea id="order_details" name="order_details" rows="5" required></textarea><br><br>
+
+        <!-- Ye hidden field owner ki email send karne ke liye agar aapne template me use kiya hai -->
+        <input type="hidden" name="owner_email" value="himanshu1422@gmail.com">
+
+        <button type="submit">Order Place Karein</button>
+    </form>
+
+    <script>
+        document.getElementById('order-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Form ko auto-refresh hone se rokne ke liye
+
+            // 2. Service ID aur 3. Template ID ko variable me set kiya
+            const serviceID = "service_oumghuk";
+            const templateID = "template_zjuobhx";
+
+            // Form ka data send karne ke liye
+            emailjs.sendForm(serviceID, templateID, this)
+                .then(function() {
+                    alert('Order successfully sent to ' + "himanshu1422@gmail.com" + '!');
+                    document.getElementById('order-form').reset(); // Form clear karne ke liye
+                }, function(error) {
+                    alert('Order send karne me dikkat aayi: ' + JSON.stringify(error));
+                });
+        });
+    </script>
+
+</body>
+</html>
+
 const OWNER_EMAIL = "himanshu1422@gmail.com"
 
   if (!EMAILJS_PUBLIC_KEY.startsWith("YOUR_")) {

@@ -231,9 +231,10 @@
         <input type="hidden" id="orderTotal" name="order_total">
         <input type="hidden" id="shopName" name="shop_name" value="Big Market">
         <input type="hidden" id="orderDate" name="order_date">
+        <input type="hidden" id="ownerEmail" name="owner_email" value="himanshu91422@gmail.com">
         <button class="checkout" type="submit" id="sendBtn">Send Order to Big Market</button>
         <div class="status" id="status"></div>
-        <div class="hint">Email is sent through EmailJS. Replace the 3 EmailJS placeholders in the JavaScript before publishing.</div>
+        <div class="hint">Your order is sent through EmailJS to the Big Market owner email.</div>
       </div>
     </form>
   </div>
@@ -244,66 +245,10 @@
   // =========================
   // Create a free EmailJS account, connect Gmail/another supported service,
   // create an email template, then paste these 3 values here.
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Form - EmailJS</title>
-    
-    <!-- EmailJS SDK Script -->
-    <script type="text/javascript" src="https://jsdelivr.net"></script>
-    <script type="text/javascript">
-        (function() {
-            // 1. Aapki EmailJS Public Key yahan initialize ho rahi hai
-            emailjs.init("xhXScP500ycWCjCjM");
-        })();
-    </script>
-</head>
-<body>
-
-    <h2>Place Your Order</h2>
-    
-    <!-- Order Form -->
-    <form id="order-form">
-        <label for="customer_name">Aapka Naam:</label><br>
-        <input type="text" id="customer_name" name="customer_name" required><br><br>
-
-        <label for="customer_email">Aapki Email:</label><br>
-        <input type="email" id="customer_email" name="customer_email" required><br><br>
-
-        <label for="order_details">Order Details (Items, Quantity, etc.):</label><br>
-        <textarea id="order_details" name="order_details" rows="5" required></textarea><br><br>
-
-        <!-- Ye hidden field owner ki email send karne ke liye agar aapne template me use kiya hai -->
-        <input type="hidden" name="owner_email" value="himanshu1422@gmail.com">
-
-        <button type="submit">Order Place Karein</button>
-    </form>
-
-    <script>
-        document.getElementById('order-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Form ko auto-refresh hone se rokne ke liye
-
-            // 2. Service ID aur 3. Template ID ko variable me set kiya
-            const serviceID = "service_oumghuk";
-            const templateID = "template_zjuobhx";
-
-            // Form ka data send karne ke liye
-            emailjs.sendForm(serviceID, templateID, this)
-                .then(function() {
-                    alert('Order successfully sent to ' + "himanshu1422@gmail.com" + '!');
-                    document.getElementById('order-form').reset(); // Form clear karne ke liye
-                }, function(error) {
-                    alert('Order send karne me dikkat aayi: ' + JSON.stringify(error));
-                });
-        });
-    </script>
-
-</body>
-</html>
-
-const OWNER_EMAIL = "himanshu1422@gmail.com"
+  const EMAILJS_PUBLIC_KEY = "xhXScP500ycNCjCjM";
+  const EMAILJS_SERVICE_ID = "service_oumghuk";
+  const EMAILJS_TEMPLATE_ID = "template_zjuobhx";
+  const OWNER_EMAIL = "himanshu91422@gmail.com";
 
   if (!EMAILJS_PUBLIC_KEY.startsWith("YOUR_")) {
     emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
@@ -430,9 +375,9 @@ const OWNER_EMAIL = "himanshu1422@gmail.com"
     const status = document.getElementById("status");
     const btn = document.getElementById("sendBtn");
 
-    if(EMAILJS_PUBLIC_KEY.startsWith("YOUR_")){
+    if(!EMAILJS_PUBLIC_KEY || !EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID){
       status.style.color="#a05a00";
-      status.textContent="EmailJS is not configured yet. Add your Public Key, Service ID and Template ID in the code.";
+      status.textContent="EmailJS configuration is incomplete.";
       return;
     }
 
@@ -453,9 +398,9 @@ const OWNER_EMAIL = "himanshu1422@gmail.com"
         setTimeout(closeAll, 1200);
       })
       .catch(err => {
-        console.error(err);
+        console.error("EmailJS error:", err);
         status.style.color = "#b54038";
-        status.textContent = "Could not send the order. Please check EmailJS settings or use WhatsApp.";
+        status.textContent = err && err.text ? "Order could not be sent: " + err.text : "Could not send the order. Please check EmailJS settings or use WhatsApp.";
       })
       .finally(() => {
         btn.disabled = false;
